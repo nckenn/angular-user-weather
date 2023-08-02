@@ -11,6 +11,8 @@ import { User } from 'src/app/shared/data-access/api/models/user.interface';
 import { UserCardComponent } from 'src/app/shared/ui/user-card/user-card.component';
 import { trackById } from 'src/app/shared/utils';
 import { Observable, Subject, of, startWith, switchMap } from 'rxjs';
+import { DialogService } from '@ngneat/dialog';
+import { WeatherDetailsComponent } from '../weather-details/weather-details.component';
 
 @Component({
   selector: 'app-users-list',
@@ -24,6 +26,7 @@ export default class UsersListComponent {
   #userApi = inject(UserService);
   #storageService = inject(LocalStorageService);
   #cdr = inject(ChangeDetectorRef);
+  #dialog = inject(DialogService);
 
   readonly trackById = trackById;
 
@@ -52,5 +55,18 @@ export default class UsersListComponent {
     this.#storageService.set('users', newUsers);
     this.removeUser$.next();
     this.#cdr.markForCheck();
+  }
+
+  showWeather(user: User) {
+    const dialogRef = this.#dialog.open(WeatherDetailsComponent, {
+      closeButton: true,
+      enableClose: false,
+      windowClass: 'dialog',
+      size: 'lg',
+      // data is typed based on the passed generic
+      data: {
+        user: user,
+      },
+    });
   }
 }

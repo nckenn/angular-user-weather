@@ -15,6 +15,7 @@
           [user]="user"
           [showSave]="false"
           [showDelete]="true"
+          (viewWeather)="showWeather(user)"
           (deleteUser)="deleteUser(user)"
         ></app-user-card>
       </div>
