@@ -1,0 +1,48 @@
+<div class="container grid items-center gap-6 pb-8 pt-6">
+  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+      All saved users
+    </h1>
+  </div>
+
+  <ng-container *ngIf="users$ | async as users">
+    <ng-container *ngIf="users.length; else noItems">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+      >
+        <app-user-card
+          *ngFor="let user of users; trackBy: trackById"
+          [user]="user"
+          [showSave]="false"
+          [showDelete]="true"
+          (deleteUser)="deleteUser(user)"
+        ></app-user-card>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #noItems>
+  <div class="text-center mt-24">
+    <svg
+      class="mx-auto h-12 w-12 text-gray-400"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 48 48"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A10.003 10.003 0 0124 26c4.21 0 7.813 2.602 9.288 6.286M30 14a6 6 0 11-12 0 6 6 0 0112 0zm12 6a4 4 0 11-8 0 4 4 0 018 0zm-28 0a4 4 0 11-8 0 4 4 0 018 0z"
+      />
+    </svg>
+    <h2 class="mt-2 text-base font-semibold leading-6 text-gray-900">
+      No users saved.
+    </h2>
+    <p class="mt-1 text-sm text-gray-500">
+      You haven’t added an user from the random users list yet.
+    </p>
+  </div>
+</ng-template>

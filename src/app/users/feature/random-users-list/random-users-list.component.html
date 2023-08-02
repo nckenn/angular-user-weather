@@ -1,0 +1,39 @@
+<div class="container grid items-center gap-6 pb-8 pt-6">
+  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+      Random Users
+    </h1>
+  </div>
+
+  <div *ngIf="users$ | async as users; else loading">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+    >
+      <app-user-card
+        *ngFor="let user of users.results; trackBy: trackById"
+        [user]="user"
+        (addUser)="addUser(user)"
+        (viewWeather)="showWeather(user)"
+        [showSave]="!user.isAdded"
+      ></app-user-card>
+    </div>
+  </div>
+</div>
+<ng-template #loading>
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+  >
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+    <app-user-card-loader></app-user-card-loader>
+  </div>
+</ng-template>

@@ -6,5 +6,5 @@ export const routes: Routes = [
     loadComponent: () => import('./layout/layout.component'),
     loadChildren: () => import('./layout/layout.routes'),
   },
-  { path: '**', redirectTo: 'homepage' },
+  { path: '**', redirectTo: '' },
 ];
