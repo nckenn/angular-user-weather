@@ -14,7 +14,7 @@ import {
   Daily,
   Hourly,
 } from 'src/app/shared/data-access/api/models';
-import { map } from 'rxjs';
+import { map, switchMap, timer } from 'rxjs';
 import { ICON_MAP } from '../../utils/icon-map';
 
 interface Data {
@@ -37,18 +37,29 @@ export class WeatherDetailsComponent {
   currentUser = this.#ref.data.user;
   currentDate = new Date();
 
-  weather$ = this.#userApi
-    .getWeather(
-      this.currentUser?.location?.coordinates?.latitude,
-      this.currentUser?.location?.coordinates?.longitude
-    )
+  weather$ = timer(0, 300000) // 5 minutes
     .pipe(
-      map((data: WeatherResponse) => {
-        return {
-          current: this.parseCurrentWeather(data.current_weather, data.daily),
-          hourly: this.parseHourlyWeather(data.hourly, data.current_weather),
-        };
-      })
+      switchMap(() =>
+        this.#userApi
+          .getWeather(
+            this.currentUser?.location?.coordinates?.latitude,
+            this.currentUser?.location?.coordinates?.longitude
+          )
+          .pipe(
+            map((data: WeatherResponse) => {
+              return {
+                current: this.parseCurrentWeather(
+                  data.current_weather,
+                  data.daily
+                ),
+                hourly: this.parseHourlyWeather(
+                  data.hourly,
+                  data.current_weather
+                ),
+              };
+            })
+          )
+      )
     );
 
   closeDialog() {
