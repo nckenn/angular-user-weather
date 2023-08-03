@@ -61,9 +61,7 @@ export default class UsersListComponent {
     const dialogRef = this.#dialog.open(WeatherDetailsComponent, {
       closeButton: true,
       enableClose: false,
-      windowClass: 'dialog',
       size: 'lg',
-      // data is typed based on the passed generic
       data: {
         user: user,
       },

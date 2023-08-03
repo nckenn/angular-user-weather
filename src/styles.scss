@@ -18,3 +18,15 @@
   overflow: auto;
   flex: 1;
 }
+
+ngneat-dialog {
+  .ngneat-dialog-backdrop {
+
+    @media screen and (max-width: 600px) {
+      padding: 0px !important;
+    }
+    .ngneat-dialog-content {
+      border-radius: 0 !important;
+    }
+  }
+}
