@@ -1,22 +1,27 @@
+<ng-container *ngIf="users$ | async; else loading"></ng-container>
 <div class="container grid items-center gap-6 pb-8 pt-6">
-  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-    <h1 class="text-3xl font-bold tracking-tight text-gray-900">
-      Random Users
-    </h1>
-  </div>
-
-  <div *ngIf="users$ | async as users; else loading">
+  <div *ngIf="allUsers$ | async as users">
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
     >
       <app-user-card
-        *ngFor="let user of users.results; trackBy: trackById"
+        *ngFor="let user of users; trackBy: trackById"
         [user]="user"
         (addUser)="addUser(user)"
         (viewWeather)="showWeather(user)"
         [showSave]="!user.isAdded"
       ></app-user-card>
     </div>
+  </div>
+
+  <div class="flex mx-auto">
+    <a
+      href="javascript:;"
+      (click)="loadMore()"
+      class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
+    >
+      Load More
+    </a>
   </div>
 </div>
 <ng-template #loading>

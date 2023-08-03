@@ -1,6 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable, map, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  map,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { UserCardComponent } from '../../../shared/ui/user-card/user-card.component';
 import { trackById } from '../../../shared/utils';
 import { LocalStorageService } from '../../../shared/services/storage.service';
@@ -21,34 +28,46 @@ import { HotToastService } from '@ngneat/hot-toast';
   templateUrl: './random-users-list.component.html',
   styleUrls: ['./random-users-list.component.scss'],
 })
-export default class RandomUsersListComponent {
+export default class RandomUsersListComponent implements OnInit {
   #userApi = inject(UserService);
   #storageService = inject(LocalStorageService);
   #dialog = inject(DialogService);
   #toast = inject(HotToastService);
 
-  users$ = this.#userApi.getRandomUsers().pipe(
-    map((users: UsersResponse) => {
-      const existingUsers = this.#storageService.has('users')
-        ? (this.#storageService.get('users') as User[])
-        : [];
-      users?.results.forEach((user: User) => {
-        const matchedUser = existingUsers.find(
-          (existingUser: User) => existingUser.login.uuid === user?.login.uuid
-        );
+  allUsers$ = new BehaviorSubject<User[]>([]);
+  pagination$ = new BehaviorSubject<number>(1);
 
-        if (matchedUser) {
-          user.isAdded = true;
-        }
-      });
+  users$ = this.pagination$.pipe(
+    switchMap((page) => {
+      return this.#userApi.getRandomUsers(page).pipe(
+        map((users: UsersResponse) => {
+          const existingUsers = this.#storageService.has('users')
+            ? (this.#storageService.get('users') as User[])
+            : [];
+          users?.results.forEach((user: User) => {
+            const matchedUser = existingUsers.find(
+              (existingUser: User) =>
+                existingUser.login.uuid === user?.login.uuid
+            );
 
-      return {
-        ...users,
-      };
+            if (matchedUser) {
+              user.isAdded = true;
+            }
+          });
+
+          return {
+            ...users,
+          };
+        }),
+        tap((users: UsersResponse) => {
+          this.allUsers$.next([...this.allUsers$.value, ...users?.results]);
+        })
+      );
     })
-  ) as Observable<UsersResponse>;
-
+  );
   readonly trackById = trackById;
+
+  ngOnInit(): void {}
 
   addUser(user: User) {
     const existingUsers = this.#storageService.has('users')
@@ -81,5 +100,9 @@ export default class RandomUsersListComponent {
         user: user,
       },
     });
+  }
+
+  loadMore() {
+    this.pagination$.next(this.pagination$.value + 1);
   }
 }

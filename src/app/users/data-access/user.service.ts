@@ -13,8 +13,8 @@ export class UserService {
   #userApi = inject(UserApiService);
   #weatherApi = inject(WeatherApiService);
 
-  getRandomUsers(): Observable<UsersResponse> {
-    return this.#userApi.get('/?page=1&results=20');
+  getRandomUsers(page: number): Observable<UsersResponse> {
+    return this.#userApi.get(`/?page=${page}&results=12`);
   }
 
   getWeather(latitude: string, longitude: string): Observable<WeatherResponse> {
