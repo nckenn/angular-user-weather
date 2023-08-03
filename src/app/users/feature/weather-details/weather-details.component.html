@@ -1,7 +1,7 @@
 <div class="dark:bg-[#424242] mt-10 bg-white">
   <app-user-map [user]="currentUser"></app-user-map>
 </div>
-<div class="p-6 space-y-6">
+<div class="p-6 space-y-6 dialog-body">
   <div *ngIf="weather$ | async as weather; else loading">
     <app-current-weather
       [currentUser]="currentUser"

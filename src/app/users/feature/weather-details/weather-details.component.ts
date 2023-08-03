@@ -37,6 +37,7 @@ interface Data {
   templateUrl: './weather-details.component.html',
   styleUrls: ['./weather-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'dialog' },
 })
 export class WeatherDetailsComponent {
   #cdr = inject(ChangeDetectorRef);

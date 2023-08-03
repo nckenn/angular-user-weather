@@ -23,12 +23,4 @@ export class UserService {
       `/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=temperature_2m,weathercode&&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=${timezone}`
     );
   }
-
-  // TODO: remove any
-  private toHttpParams(params: any) {
-    return Object.getOwnPropertyNames(params).reduce(
-      (p, key) => p.set(key, params[key]),
-      new HttpParams()
-    );
-  }
 }

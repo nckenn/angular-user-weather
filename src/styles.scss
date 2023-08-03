@@ -6,10 +6,15 @@
 @tailwind components;
 @tailwind utilities;
 
-ngneat-dialog {
-  .ngneat-dialog-backdrop {
-    .ngneat-dialog-content {
-      overflow: auto !important;
-    }
-  }
+.dialog {
+  display: flex;
+  height: 100%;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.dialog-body {
+  overflow: auto;
+  flex: 1;
 }
