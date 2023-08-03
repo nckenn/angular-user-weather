@@ -1,12 +1,11 @@
 <div class="container grid items-center gap-6 pb-8 pt-6">
-  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-    <h1 class="text-3xl font-bold tracking-tight text-gray-900">
-      All saved users
-    </h1>
-  </div>
-
   <ng-container *ngIf="users$ | async as users">
     <ng-container *ngIf="users.length; else noItems">
+      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+          All saved users ({{ users.length }})
+        </h1>
+      </div>
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
       >

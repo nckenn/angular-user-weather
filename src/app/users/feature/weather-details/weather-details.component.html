@@ -1,109 +1,48 @@
-<div class="p-6 space-y-6 mt-10">
-  <div *ngIf="weather$ | async as weather">
-    <div class="flex items-center justify-center">
-      <div class="flex flex-col bg-white rounded p-4 w-full max-w-xs">
-        <div class="font-bold text-xl">
-          {{ currentUser.location.city }}, {{ currentUser.location.country }}
-        </div>
-        <div class="text-sm text-gray-500">
-          {{ currentDate | date : "EEEE d MMMM y" }}
-        </div>
-        <div
-          class="mt-6 text-6xl self-center inline-flex items-center justify-center rounded-lg text-indigo-400 h-32 w-32"
-        >
-          <img
-            class="w-32 h-32"
-            [src]="getIconUrl(weather?.current?.iconCode)"
-          />
-        </div>
-        <div class="flex flex-row items-center justify-center mt-6">
-          <div class="font-medium text-6xl">
-            {{ weather?.current?.currentTemp }}&deg;
-          </div>
-          <div class="flex flex-col items-center ml-6">
-            <div class="mt-1 flex items-center">
-              <span class="text-sm">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-3 h-3 mr-1"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75"
-                  />
-                </svg>
-              </span>
-              <span class="text-sm font-light text-gray-500"
-                >{{ weather?.current?.highTemp }}&deg;C</span
-              >
-            </div>
-            <div class="flex items-center">
-              <span class="text-sm">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-3 h-3 mr-1"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75"
-                  />
-                </svg>
-              </span>
-              <span class="text-sm font-light text-gray-500"
-                >{{ weather?.current?.lowTemp }}&deg;C</span
-              >
-            </div>
-          </div>
-        </div>
-        <!-- <div class="flex flex-row justify-between mt-6">
-          <div class="flex flex-col items-center">
-            <div class="font-medium text-sm">Wind</div>
-            <div class="text-sm text-gray-500">9k/h</div>
-          </div>
-          <div class="flex flex-col items-center">
-            <div class="font-medium text-sm">Humidity</div>
-            <div class="text-sm text-gray-500">68%</div>
-          </div>
-          <div class="flex flex-col items-center">
-            <div class="font-medium text-sm">Visibility</div>
-            <div class="text-sm text-gray-500">10km</div>
-          </div>
-        </div> -->
-      </div>
-    </div>
+<div class="dark:bg-[#424242] mt-10 bg-white">
+  <app-user-map [user]="currentUser"></app-user-map>
+</div>
+<div class="p-6 space-y-6">
+  <div *ngIf="weather$ | async as weather; else loading">
+    <app-current-weather
+      [currentUser]="currentUser"
+      [currentWeather]="weather?.current"
+    ></app-current-weather>
 
     <div class="mt-8">
-      <div
+      <app-hourly-weather
         *ngFor="let hour of weather.hourly"
-        class="h-auto -z-1 w-[100%] overflow-x-hidden bg-white shadow rounded-[40px] p-4 flex flex-row my-1"
-      >
-        <div class="flex flex-row place-items-center space-x-10">
-          <img
-            [src]="getIconUrl(hour?.iconCode)"
-            class="w-[70px] h-[70px] rounded-full shadow relative z-20 bg-white"
-          />
-          <div class="text-gray-500 flex flex-col">
-            <p>{{ hour?.timestamp | date : "EEEE" }}</p>
-            <p class="font-semibold">
-              {{ hour?.timestamp | date : "h:mm a" }}
-            </p>
+        [hourlyWeather]="hour"
+      ></app-hourly-weather>
+    </div>
+  </div>
+  <ng-template #loading>
+    <div class="w-full">
+      <div class="flex flex-col items-center py-10">
+        <div class="flex flex-col flex-1 gap-5 sm:p-2">
+          <div class="flex flex-1 flex-col gap-3 items-center">
+            <div class="bg-gray-200 animate-pulse h-20 w-20 rounded-md"></div>
+            <div class="bg-gray-200 w-full animate-pulse h-3 rounded-2xl"></div>
+            <div class="bg-gray-200 w-full animate-pulse h-3 rounded-2xl"></div>
+            <div class="bg-gray-200 w-full animate-pulse h-3 rounded-2xl"></div>
+            <div class="bg-gray-200 w-full animate-pulse h-3 rounded-2xl"></div>
           </div>
-          <div class="text-gray-500">
-            <p>Temp</p>
-            <p class="font-semibold">{{ hour?.temp }}&deg;C</p>
+          <div class="mt-auto flex gap-3 justify-center">
+            <div class="bg-gray-200 w-20 h-8 animate-pulse rounded-full"></div>
+            <div class="bg-gray-200 w-20 h-8 animate-pulse rounded-full"></div>
           </div>
         </div>
       </div>
+
+      <div class="mt-auto flex flex-col gap-3 justify-center">
+        <div class="bg-gray-200 w-full h-16 animate-pulse rounded-full"></div>
+        <div class="bg-gray-200 w-full h-16 animate-pulse rounded-full"></div>
+        <div class="bg-gray-200 w-full h-16 animate-pulse rounded-full"></div>
+        <div class="bg-gray-200 w-full h-16 animate-pulse rounded-full"></div>
+        <div class="bg-gray-200 w-full h-16 animate-pulse rounded-full"></div>
+        <div class="bg-gray-200 w-full h-16 animate-pulse rounded-full"></div>
+        <div class="bg-gray-200 w-full h-16 animate-pulse rounded-full"></div>
+        <div class="bg-gray-200 w-full h-16 animate-pulse rounded-full"></div>
+      </div>
     </div>
-  </div>
+  </ng-template>
 </div>

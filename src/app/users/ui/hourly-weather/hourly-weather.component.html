@@ -1,0 +1,20 @@
+<div
+  class="h-auto -z-1 w-[100%] overflow-x-hidden bg-white shadow rounded-[40px] p-4 flex flex-row my-1"
+>
+  <div class="flex flex-row place-items-center space-x-10">
+    <img
+      [src]="getIconUrl(hourlyWeather?.iconCode)"
+      class="w-[70px] h-[70px] rounded-full shadow relative z-20 bg-white"
+    />
+    <div class="text-gray-500 flex flex-col">
+      <p>{{ hourlyWeather?.timestamp | date : "EEEE" }}</p>
+      <p class="font-semibold">
+        {{ hourlyWeather?.timestamp | date : "h:mm a" }}
+      </p>
+    </div>
+    <div class="text-gray-500">
+      <p>Temp</p>
+      <p class="font-semibold">{{ hourlyWeather?.temp }}&deg;C</p>
+    </div>
+  </div>
+</div>

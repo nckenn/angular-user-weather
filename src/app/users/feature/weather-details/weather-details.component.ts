@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   inject,
   ChangeDetectorRef,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogRef } from '@ngneat/dialog';
@@ -16,6 +17,9 @@ import {
 } from 'src/app/shared/data-access/api/models';
 import { map, switchMap, timer } from 'rxjs';
 import { ICON_MAP } from '../../utils/icon-map';
+import { UserMapComponent } from '../../ui/user-map/user-map.component';
+import { CurrentWeatherComponent } from '../../ui/current-weather/current-weather.component';
+import { HourlyWeatherComponent } from '../../ui/hourly-weather/hourly-weather.component';
 
 interface Data {
   user: User;
@@ -24,7 +28,12 @@ interface Data {
 @Component({
   selector: 'app-weather-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    UserMapComponent,
+    CurrentWeatherComponent,
+    HourlyWeatherComponent,
+  ],
   templateUrl: './weather-details.component.html',
   styleUrls: ['./weather-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +44,6 @@ export class WeatherDetailsComponent {
   #userApi = inject(UserService);
 
   currentUser = this.#ref.data.user;
-  currentDate = new Date();
 
   weather$ = timer(0, 300000) // 5 minutes
     .pipe(
@@ -65,10 +73,6 @@ export class WeatherDetailsComponent {
   closeDialog() {
     this.#ref.close();
     this.#cdr.markForCheck();
-  }
-
-  getIconUrl(iconCode: number | undefined) {
-    return `./assets/icons/${ICON_MAP.get(iconCode)}.svg`;
   }
 
   parseCurrentWeather(current_weather: CurrentWeather, daily: Daily) {

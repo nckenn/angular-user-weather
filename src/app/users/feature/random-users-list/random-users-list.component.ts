@@ -12,6 +12,7 @@ import {
 import { UserCardLoaderComponent } from 'src/app/shared/ui/user-card-loader/user-card-loader.component';
 import { DialogService } from '@ngneat/dialog';
 import { WeatherDetailsComponent } from '../weather-details/weather-details.component';
+import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
   selector: 'app-random-users-list',
@@ -24,6 +25,7 @@ export default class RandomUsersListComponent {
   #userApi = inject(UserService);
   #storageService = inject(LocalStorageService);
   #dialog = inject(DialogService);
+  #toast = inject(HotToastService);
 
   users$ = this.#userApi.getRandomUsers().pipe(
     map((users: UsersResponse) => {
@@ -52,8 +54,20 @@ export default class RandomUsersListComponent {
     const existingUsers = this.#storageService.has('users')
       ? (this.#storageService.get('users') as User[])
       : [];
+
+    const matchedUser = existingUsers.find(
+      (existingUser: User) => existingUser.login.uuid === user?.login.uuid
+    );
+
+    if (matchedUser) {
+      this.#toast.warning('User already saved.');
+      return;
+    }
+
     existingUsers.push(user);
     this.#storageService.set('users', existingUsers);
+
+    this.#toast.success('Successfully saved.');
   }
 
   showWeather(user: User) {
